@@ -6,7 +6,21 @@ void main() => runApp(MaterialApp(
       debugShowCheckedModeBanner: false,
     ));
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  @override
+  void initState() {
+    super.initState();
+
+    fetchData();
+  }
+
+  fetchData() async {}
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
