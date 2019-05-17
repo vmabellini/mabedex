@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
+import 'package:mabedex/pokemon.dart';
 
 void main() => runApp(MaterialApp(
       title: "Mabedex",
@@ -12,6 +16,11 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  var url =
+      "https://raw.githubusercontent.com/Biuni/PokemonGO-Pokedex/master/pokedex.json";
+
+  PokeHub pokeHub;
+
   @override
   void initState() {
     super.initState();
@@ -19,7 +28,12 @@ class _HomePageState extends State<HomePage> {
     fetchData();
   }
 
-  fetchData() async {}
+  fetchData() async {
+    var res = await http.get(url);
+    var decodedJson = jsonDecode(res.body);
+
+    pokeHub = PokeHub.fromJson(decodedJson);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,8 +42,23 @@ class _HomePageState extends State<HomePage> {
           title: Text("Mabedex"),
           backgroundColor: Colors.cyan,
         ),
-        body: Center(
-          child: Text("Hello!"),
+        body: GridView.count(
+          crossAxisCount: 2,
+          children: pokeHub.pokemon
+              .map((poke) => Padding(
+                  padding: const EdgeInsets.all(2.0),
+                  child: Card(
+                      child: Column(
+                    children: <Widget>[
+                      Container(
+                        height: 100.0,
+                        width: 100.0,
+                        decoration:
+                            BoxDecoration(image: DecorationImage(image:NetworkImage(poke.img)),
+                      )
+                    ],
+                  ))))
+              .toList(),
         ),
         drawer: Drawer(),
         floatingActionButton: FloatingActionButton(
